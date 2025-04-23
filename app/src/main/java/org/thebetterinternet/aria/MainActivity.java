@@ -234,7 +234,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showTabsPopupMenu() {
-       PopupMenu popupMenu = new PopupMenu(this, tabsButton, 0, 0, R.style.Widget_Material3_PopupMenu);
+       PopupMenu popupMenu = new PopupMenu(this, tabsButton);
         for (int i = 0; i < tabs.size(); i++) {
             String title = "Tab " + (i + 1);
             if (i == currentTab) title += " ✓";
