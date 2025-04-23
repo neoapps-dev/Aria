@@ -44,13 +44,13 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: app-release
-          path: app/build/outputs/apk/release/app-release-arm64-v8a.apk
+          path: app/build/outputs/apk/release/app-arm64-v8a-release.apk
 
       - name: Upload release apk (x86_64)
         uses: actions/upload-artifact@v4
         with:
           name: app-release
-          path: app/build/outputs/apk/release/app-release-x86_64.apk
+          path: app/build/outputs/apk/release/app-x86_64-release.apk
       
       - name: List files
         run: ls -R app/build/outputs/apk/release/
