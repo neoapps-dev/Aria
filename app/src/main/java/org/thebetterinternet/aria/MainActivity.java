@@ -74,8 +74,8 @@ public class MainActivity extends AppCompatActivity {
         lockIcon = findViewById(R.id.lockIcon);
         tabBar = findViewById(R.id.tabBar);
 
-        bottomBar.setAlpha(0.95f); // Ensure visibility
-        findViewById(R.id.topBar).setAlpha(0.95f); // Ensure visibility
+        bottomBar.setAlpha(0.95f);
+        findViewById(R.id.topBar).setAlpha(0.95f);
 
         initGecko();
         setupListeners();
@@ -117,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
         currentTab = index;
         geckoSession = tabs.get(index);
         geckoView.setSession(geckoSession);
-        urlBar.setText(geckoSession.getCurrentUri() != null ? geckoSession.getCurrentUri() : defaultUrl);
+        urlBar.setText("");
         updateNavButtons();
     }
 
@@ -129,15 +129,14 @@ public class MainActivity extends AppCompatActivity {
         tabBar.removeAllViews();
         for (int i = 0; i < tabs.size(); i++) {
             ImageButton tabButton = new ImageButton(this);
-            tabButton.setImageResource(R.drawable.ic_tab); // Use your tab icon
+            tabButton.setImageResource(R.drawable.ic_tab);
             tabButton.setBackgroundResource(android.R.color.transparent);
             int idx = i;
             tabButton.setOnClickListener(v -> switchToTab(idx));
             tabBar.addView(tabButton);
         }
-        // "+" button to add new tab
         ImageButton addTabButton = new ImageButton(this);
-        addTabButton.setImageResource(R.drawable.ic_add); // Use your add icon
+        addTabButton.setImageResource(R.drawable.ic_add);
         addTabButton.setBackgroundResource(android.R.color.transparent);
         addTabButton.setOnClickListener(v -> addNewTab(defaultUrl));
         tabBar.addView(addTabButton);
@@ -153,7 +152,7 @@ public class MainActivity extends AppCompatActivity {
                     int dy = scrollY - oldScrollY;
                     if (Math.abs(dy) < 30) return;
 
-                    float translationDistance = bottomBar.getHeight(); // Use consistent height
+                    float translationDistance = bottomBar.getHeight();
                     runOnUiThread(() -> {
                         if (dy > 0) {
                             bottomBar.animate().translationY(translationDistance).alpha(0f).setDuration(200).start();
@@ -240,7 +239,7 @@ public class MainActivity extends AppCompatActivity {
         }
         
         geckoSession.loadUri(url);
-        urlBar.clearFocus(); // Clear focus to hide the keyboard
+        urlBar.clearFocus();
     }
     
     private void updateNavButtons() {
