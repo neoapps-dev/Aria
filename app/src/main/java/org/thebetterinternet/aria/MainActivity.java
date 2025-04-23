@@ -10,6 +10,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.LinearLayout;
 import android.view.LayoutInflater;
+import android.widget.PopupMenu;
+import android.view.MenuItem;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -48,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
     private GeckoSession geckoSession;
     private EditText urlBar;
     private MaterialCardView bottomBar;
-    private ImageButton goButton, backButton, forwardButton, homeButton, refreshButton;
+    private ImageButton goButton, backButton, forwardButton, homeButton, refreshButton, tabsButton;
     private ImageView lockIcon;
     private final String defaultUrl = "https://www.google.com";
     private static GeckoRuntime runtime;
@@ -73,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
         refreshButton = findViewById(R.id.btnRefresh);
         lockIcon = findViewById(R.id.lockIcon);
         tabBar = findViewById(R.id.tabBar);
+        tabsButton = findViewById(R.id.btnTabs);
 
         bottomBar.setAlpha(0.95f);
         findViewById(R.id.topBar).setAlpha(0.95f);
@@ -226,6 +229,30 @@ public class MainActivity extends AppCompatActivity {
         });
         
         refreshButton.setOnClickListener(v -> geckoSession.reload());
+
+        tabsButton.setOnClickListener(v -> showTabsPopupMenu());
+    }
+
+    private void showTabsPopupMenu() {
+        PopupMenu popupMenu = new PopupMenu(this, tabsButton);
+        for (int i = 0; i < tabs.size(); i++) {
+            String title = "Tab " + (i + 1);
+            popupMenu.getMenu().add(0, i, i, title + (i == currentTab ? " ✓" : ""));
+        }
+        popupMenu.getMenu().add(1, 999, tabs.size(), "New Tab");
+
+        popupMenu.setOnMenuItemClickListener(item -> {
+            if (item.getGroupId() == 0) {
+                switchToTab(item.getItemId());
+                return true;
+            } else if (item.getItemId() == 999) {
+                addNewTab(defaultUrl);
+                return true;
+            }
+            return false;
+        });
+
+        popupMenu.show();
     }
     
     private void loadUrl(String input) {
@@ -251,7 +278,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void setButtonState(ImageButton button, boolean isEnabled) {
         button.setEnabled(isEnabled);
-        button.setAlpha(isEnabled ? 1.0f : 0.5f); // Adjust alpha for visual feedback
+        button.setAlpha(isEnabled ? 1.0f : 0.5f);
     }
     
     @Override

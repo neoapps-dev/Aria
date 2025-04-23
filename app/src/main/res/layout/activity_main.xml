@@ -91,7 +91,7 @@
             android:gravity="center"
             android:orientation="horizontal"
             android:padding="8dp"
-            android:weightSum="4">
+            android:weightSum="5">
 
             <ImageButton
                 android:id="@+id/btnBack"
@@ -108,6 +108,15 @@
                 android:layout_height="48dp"
                 android:layout_weight="1"
                 android:src="@drawable/ic_home"
+                app:tint="?attr/colorPrimary"
+                android:background="?attr/selectableItemBackgroundBorderless" />
+
+            <ImageButton
+                android:id="@+id/btnTabs"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:src="@drawable/ic_tab"
                 app:tint="?attr/colorPrimary"
                 android:background="?attr/selectableItemBackgroundBorderless" />
 
