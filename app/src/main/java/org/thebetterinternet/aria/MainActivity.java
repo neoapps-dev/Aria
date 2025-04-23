@@ -68,6 +68,9 @@ public class MainActivity extends AppCompatActivity {
         refreshButton = findViewById(R.id.btnRefresh);
         lockIcon = findViewById(R.id.lockIcon);
 
+        bottomBar.setAlpha(0.95f); // Ensure visibility
+        findViewById(R.id.topBar).setAlpha(0.95f); // Ensure visibility
+
         initGecko();
         setupListeners();
     }
@@ -102,50 +105,22 @@ public class MainActivity extends AppCompatActivity {
 
     private GeckoSession.ContentDelegate createContentDelegate(MaterialCardView bottomBar) {
         return new GeckoSession.ContentDelegate() {
-            private int lastScrollY = 0;
             private MaterialCardView topBar = findViewById(R.id.topBar);
-            
-            @Override
-            public void onTitleChange(GeckoSession session, String title) {
-                if (title != null && !title.isEmpty()) {
-                    // Update title if needed
-                }
-            }
 
+            @Override
             public void onFirstComposite(GeckoSession session) {
                 geckoView.setOnScrollChangeListener((v, scrollX, scrollY, oldScrollX, oldScrollY) -> {
                     int dy = scrollY - oldScrollY;
-                    if (Math.abs(dy) < 30) {
-                        return;
-                    }
+                    if (Math.abs(dy) < 30) return;
 
-                    float translationDistance = bottomBar.getHeight();
-                    
+                    float translationDistance = bottomBar.getHeight(); // Use consistent height
                     runOnUiThread(() -> {
                         if (dy > 0) {
-                            bottomBar.animate()
-                                    .translationY(translationDistance)
-                                    .alpha(0f)
-                                    .setDuration(200)
-                                    .start();
-                                    
-                            topBar.animate()
-                                    .translationY(-translationDistance)
-                                    .alpha(0f)
-                                    .setDuration(200)
-                                    .start();
+                            bottomBar.animate().translationY(translationDistance).alpha(0f).setDuration(200).start();
+                            topBar.animate().translationY(-topBar.getHeight()).alpha(0f).setDuration(200).start();
                         } else {
-                            bottomBar.animate()
-                                    .translationY(0f)
-                                    .alpha(0.95f)
-                                    .setDuration(200)
-                                    .start();
-                                    
-                            topBar.animate()
-                                    .translationY(0f)
-                                    .alpha(0.95f)
-                                    .setDuration(200)
-                                    .start();
+                            bottomBar.animate().translationY(0f).alpha(0.95f).setDuration(200).start();
+                            topBar.animate().translationY(0f).alpha(0.95f).setDuration(200).start();
                         }
                     });
                 });
@@ -225,18 +200,19 @@ public class MainActivity extends AppCompatActivity {
         }
         
         geckoSession.loadUri(url);
+        urlBar.clearFocus(); // Clear focus to hide the keyboard
     }
     
     private void updateNavButtons() {
         runOnUiThread(() -> {
-            backButton.setEnabled(mCanGoBack);
-            backButton.setAlpha(mCanGoBack ? 1.0f : 0.5f);
+            setButtonState(backButton, mCanGoBack);
+            setButtonState(forwardButton, mCanGoForward);
         });
-        
-        runOnUiThread(() -> {
-            forwardButton.setEnabled(mCanGoForward);
-            forwardButton.setAlpha(mCanGoForward ? 1.0f : 0.5f);
-        });
+    }
+
+    private void setButtonState(ImageButton button, boolean isEnabled) {
+        button.setEnabled(isEnabled);
+        button.setAlpha(isEnabled ? 1.0f : 0.5f); // Adjust alpha for visual feedback
     }
     
     @Override

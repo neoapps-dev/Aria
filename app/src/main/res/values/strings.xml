@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Aria Browser</string>
+    <string name="go_button_description">Go Button</string>
+    <string name="back_button_description">Back Button</string>
+    <string name="forward_button_description">Forward Button</string>
+    <string name="home_button_description">Home Button</string>
+    <string name="refresh_button_description">Refresh Button</string>
 </resources>

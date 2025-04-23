@@ -49,7 +49,8 @@
                 android:id="@+id/goButton"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/go_button_description" <!-- Accessibility -->
+                android:background="?attr/selectableItemBackgroundBorderless" <!-- Ripple effect -->
                 android:src="@drawable/ic_search"
                 app:tint="?attr/colorPrimary" />
         </LinearLayout>
@@ -59,8 +60,9 @@
         android:id="@+id/geckoView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="80dp"
-        android:layout_marginBottom="80dp" />
+        android:layout_marginTop="72dp" <!-- Adjusted to match topBar height -->
+        android:layout_marginBottom="72dp" <!-- Adjusted to match bottomBar height -->
+    />
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/bottomBar"
