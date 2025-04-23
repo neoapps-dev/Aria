@@ -7,6 +7,11 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <org.mozilla.geckoview.GeckoView
+        android:id="@+id/geckoView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/topBar"
         android:layout_width="match_parent"
@@ -15,6 +20,7 @@
         app:cardCornerRadius="24dp"
         app:cardElevation="8dp"
         android:alpha="0.95"
+        android:layout_gravity="top"
         app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior">
 
         <LinearLayout
@@ -55,14 +61,6 @@
                 app:tint="?attr/colorPrimary" />
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
-
-    <org.mozilla.geckoview.GeckoView
-        android:id="@+id/geckoView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="72dp"
-        android:layout_marginBottom="72dp"
-    />
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/bottomBar"
