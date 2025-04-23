@@ -3,4 +3,9 @@
         <item name="colorOnPrimary">@color/black</item>
         <item name="colorOnSecondary">@color/black</item>
     </style>
+    <style name="Widget.Material3.PopupMenu" parent="Widget.Material3.PopupMenu">
+        <item name="android:popupBackground">@drawable/material_popup_bg</item>
+        <item name="android:textColor">@color/md_theme_onSurface</item>
+        <item name="android:elevation">8dp</item>
+    </style>
 </resources>

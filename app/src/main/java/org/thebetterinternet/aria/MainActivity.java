@@ -234,10 +234,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showTabsPopupMenu() {
-        PopupMenu popupMenu = new PopupMenu(this, tabsButton);
+       PopupMenu popupMenu = new PopupMenu(this, tabsButton, 0, 0, R.style.Widget_Material3_PopupMenu);
         for (int i = 0; i < tabs.size(); i++) {
             String title = "Tab " + (i + 1);
-            popupMenu.getMenu().add(0, i, i, title + (i == currentTab ? " ✓" : ""));
+            if (i == currentTab) title += " ✓";
+            popupMenu.getMenu().add(0, i, i, title);
         }
         popupMenu.getMenu().add(1, 999, tabs.size(), "New Tab");
 
