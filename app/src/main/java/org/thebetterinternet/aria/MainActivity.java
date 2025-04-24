@@ -62,12 +62,12 @@ public class MainActivity extends AppCompatActivity {
     private LinearLayout tabBar;
     private List<GeckoSession> tabs = new ArrayList<>();
     private int currentTab = 0;
+    private final Map<GeckoSession, String> tabUrls = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         geckoView = findViewById(R.id.geckoView);
         bottomBar = findViewById(R.id.bottomBar);
         urlBar = findViewById(R.id.urlBar);
@@ -115,16 +115,20 @@ public class MainActivity extends AppCompatActivity {
         session.loadUri(url);
 
         tabs.add(session);
+        tabUrls.put(session, url);
         switchToTab(tabs.size() - 1);
         updateTabBar();
     }
 
     private void switchToTab(int index) {
+        if (index < 0 || index >= tabs.size()) return;
         currentTab = index;
         geckoSession = tabs.get(index);
         geckoView.setSession(geckoSession);
-        urlBar.setText("");
+        String url = tabUrls.getOrDefault(geckoSession, "");
+        urlBar.setText(url);
         updateNavButtons();
+        updateTabBar();
     }
 
     private void setupTabBar() {
@@ -134,18 +138,45 @@ public class MainActivity extends AppCompatActivity {
     private void updateTabBar() {
         tabBar.removeAllViews();
         for (int i = 0; i < tabs.size(); i++) {
+            LinearLayout tabLayout = new LinearLayout(this);
+            tabLayout.setOrientation(LinearLayout.HORIZONTAL);
             ImageButton tabButton = new ImageButton(this);
             tabButton.setImageResource(R.drawable.ic_tab);
             tabButton.setBackgroundResource(android.R.color.transparent);
+            if (i == currentTab) {
+                tabButton.setAlpha(1.0f);
+            } else {
+                tabButton.setAlpha(0.5f);
+            }
+
             int idx = i;
             tabButton.setOnClickListener(v -> switchToTab(idx));
-            tabBar.addView(tabButton);
+            tabLayout.addView(tabButton);
+            if (tabs.size() > 1) {
+                ImageButton closeButton = new ImageButton(this);
+                closeButton.setImageResource(R.drawable.ic_close);
+                closeButton.setBackgroundResource(android.R.color.transparent);
+                closeButton.setOnClickListener(v -> closeTab(idx));
+                tabLayout.addView(closeButton);
+            }
+
+            tabBar.addView(tabLayout);
         }
         ImageButton addTabButton = new ImageButton(this);
         addTabButton.setImageResource(R.drawable.ic_add);
         addTabButton.setBackgroundResource(android.R.color.transparent);
         addTabButton.setOnClickListener(v -> addNewTab(defaultUrl));
         tabBar.addView(addTabButton);
+    }
+
+    private void closeTab(int index) {
+        if (tabs.size() <= 1) return;
+        tabs.get(index).close();
+        tabs.remove(index);
+        if (currentTab >= tabs.size()) {
+            currentTab = tabs.size() - 1;
+        }
+        switchToTab(currentTab);
     }
 
     private GeckoSession.ContentDelegate createContentDelegate(MaterialCardView bottomBar) {
@@ -175,10 +206,14 @@ public class MainActivity extends AppCompatActivity {
 
     private GeckoSession.NavigationDelegate createNavigationDelegate() {
         return new GeckoSession.NavigationDelegate() {
+            @Override
             public void onLocationChange(GeckoSession session, String url, List<GeckoSession.PermissionDelegate.ContentPermission> perms, boolean hasUserGesture) {
                 runOnUiThread(() -> {
-                    urlBar.setText(url);
-                    updateNavButtons();
+                    tabUrls.put(session, url);
+                    if (session == geckoSession) {
+                        urlBar.setText(url);
+                        updateNavButtons();
+                    }
                 });
             }
             
