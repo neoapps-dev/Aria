@@ -206,7 +206,6 @@ public class MainActivity extends AppCompatActivity {
 
     private GeckoSession.NavigationDelegate createNavigationDelegate() {
         return new GeckoSession.NavigationDelegate() {
-            @Override
             public void onLocationChange(GeckoSession session, String url, List<GeckoSession.PermissionDelegate.ContentPermission> perms, boolean hasUserGesture) {
                 runOnUiThread(() -> {
                     tabUrls.put(session, url);
