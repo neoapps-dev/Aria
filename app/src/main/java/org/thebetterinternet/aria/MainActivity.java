@@ -12,9 +12,12 @@ import android.widget.LinearLayout;
 import android.view.LayoutInflater;
 import android.widget.PopupMenu;
 import android.view.MenuItem;
-
+import android.graphics.drawable.InsetDrawable;
+import android.os.Build;
+import android.util.TypedValue;
+import androidx.annotation.MenuRes;
+import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.appcompat.app.AppCompatActivity;
-
 import org.mozilla.geckoview.AllowOrDeny;
 import org.mozilla.geckoview.Autocomplete;
 import org.mozilla.geckoview.BasicSelectionActionDelegate;
@@ -234,13 +237,36 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showTabsPopupMenu() {
-       PopupMenu popupMenu = new PopupMenu(this, tabsButton);
+        PopupMenu popupMenu = new PopupMenu(this, tabsButton);
         for (int i = 0; i < tabs.size(); i++) {
             String title = "Tab " + (i + 1);
             if (i == currentTab) title += " ✓";
-            popupMenu.getMenu().add(0, i, i, title);
+            popupMenu.getMenu().add(0, i, i, title).setIcon(R.drawable.ic_tab);
         }
-        popupMenu.getMenu().add(1, 999, tabs.size(), "New Tab");
+        popupMenu.getMenu().add(1, 999, tabs.size(), "New Tab").setIcon(R.drawable.ic_add);
+        if (popupMenu.getMenu() instanceof MenuBuilder) {
+            MenuBuilder menuBuilder = (MenuBuilder) popupMenu.getMenu();
+            menuBuilder.setOptionalIconsVisible(true);
+
+            int iconMarginDp = 8;
+            int iconMarginPx = (int) TypedValue.applyDimension(
+                    TypedValue.COMPLEX_UNIT_DIP, iconMarginDp, getResources().getDisplayMetrics());
+
+            for (MenuItem item : menuBuilder.getVisibleItems()) {
+                if (item.getIcon() != null) {
+                    if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
+                        item.setIcon(new InsetDrawable(item.getIcon(), iconMarginPx, 0, iconMarginPx, 0));
+                    } else {
+                        item.setIcon(new InsetDrawable(item.getIcon(), iconMarginPx, 0, iconMarginPx, 0) {
+                            @Override
+                            public int getIntrinsicWidth() {
+                                return super.getIntrinsicHeight() + iconMarginPx * 2;
+                            }
+                        });
+                    }
+                }
+            }
+        }
 
         popupMenu.setOnMenuItemClickListener(item -> {
             if (item.getGroupId() == 0) {
